@@ -1,0 +1,111 @@
+{
+  "name": "mmd-reader",
+  "productName": "Mermaid Reader",
+  "version": "1.0.0",
+  "description": "Offline, fully local desktop reader for Mermaid diagrams and Markdown documents — code on the left, live diagram on the right. No accounts, no servers, no telemetry.",
+  "author": {
+    "name": "Navin Jairam",
+    "email": "navin.jairam@gmail.com",
+    "url": "https://github.com/Lucifer-Newstar"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Lucifer-Newstar/mmd-reader#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lucifer-Newstar/mmd-reader.git"
+  },
+  "bugs": "https://github.com/Lucifer-Newstar/mmd-reader/issues",
+  "keywords": [
+    "mermaid",
+    "markdown",
+    "diagram",
+    "reader",
+    "viewer",
+    "electron",
+    "desktop-app",
+    "offline",
+    "local-first",
+    "flowchart",
+    "sequence-diagram"
+  ],
+  "main": "main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "check": "node scripts/check.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.lucifernewstar.mmdreader",
+    "productName": "Mermaid Reader",
+    "copyright": "Copyright © 2026 Navin Jairam",
+    "directories": { "output": "dist-app" },
+    "publish": null,
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "files": [
+      "main/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "package.json",
+      "LICENSE"
+    ],
+    "fileAssociations": [
+      {
+        "ext": "mmd",
+        "name": "Mermaid diagram",
+        "description": "Mermaid diagram source file",
+        "role": "Viewer",
+        "icon": "assets/icon.png"
+      },
+      {
+        "ext": "mermaid",
+        "name": "Mermaid diagram",
+        "description": "Mermaid diagram source file",
+        "role": "Viewer"
+      },
+      {
+        "ext": "md",
+        "name": "Markdown document",
+        "description": "Markdown document",
+        "role": "Viewer"
+      },
+      {
+        "ext": "markdown",
+        "name": "Markdown document",
+        "description": "Markdown document",
+        "role": "Editor"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.png",
+      "darkModeSupport": true,
+      "hardenedRuntime": true
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Mermaid Reader"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility;Graphics",
+      "icon": "assets/icon.png",
+      "synopsis": "Offline Mermaid & Markdown file reader"
+    }
+  },
+  "devDependencies": {
+    "electron": "^35.7.5",
+    "electron-builder": "^26.15.3"
+  }
+}

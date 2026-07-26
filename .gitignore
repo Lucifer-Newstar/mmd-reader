@@ -1,0 +1,5 @@
+*.log
+node_modules/
+shots/
+dist-app/
+nohup.out
