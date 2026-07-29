@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mermaid</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="vendor/codemirror/codemirror.css" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body data-view="home">
+
+  <!-- ======================= icon sprite ======================= -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e80962"/>
+        <stop offset="1" stop-color="#5d55d4"/>
+      </linearGradient>
+    </defs>
+    <symbol id="logo" viewBox="0 0 64 64">
+      <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#brandGrad)"/>
+      <path fill="#fff" d="M41.5 12.5c-1.9 4.2-2.7 8.9-2.7 13.6 0 5.4 1.6 10.6 4.4 15.1-2.5-1.5-4.4-3.9-5.8-6.9-.5 1.5-.8 3.2-.8 4.9 0 4.1 1.8 7.7 4.6 10.2-9.7-2.4-16.9-11-16.9-21.5 0-4.9 1.6-9.4 4.3-13.1l.8.3c3.9 2.1 8.7 1.4 12.1-2.6z"/>
+      <path fill="#fff" opacity=".92" d="M20 45.6c2.7-2.2 5.6-3.3 8.7-3.3 3 0 5.8 1 8.1 2.9 2.1-1.6 4.7-2.4 7.5-2.4 2.4 0 4.6.7 6.5 1.8.6.4.8 1.2.4 1.8-.2.4-.7.6-1.1.6-.2 0-.4 0-.6-.1-1.5-.9-3.3-1.4-5.2-1.4-2.4 0-4.6.9-6.4 2.3l-.4.3-.4-.2c-2.5-1.7-5.5-2.6-8.7-2.6-2.7 0-5.3.8-7.5 2.4-.2.1-.4.2-.6.2-.4 0-.8-.2-1-.5-.4-.6-.3-1.4.3-1.8z"/>
+    </symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M2 10h20"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8M16 13H8M16 17H8"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 3v18"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-max" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-fit" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="8" y="8" width="8" height="8" rx="1.5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.15c0 .31.2.67.8.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3zM19 15l.9 2.4 2.4.9-2.4.9L19 21.6l-.9-2.4-2.4-.9 2.4-.9L19 15zM5 16l.7 1.8 1.8.7-1.8.7L5 21l-.7-1.8L2.5 18.5l1.8-.7L5 16z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 13 2 2 4-4"/></symbol>
+    <symbol id="i-sample" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.2 2.2M16.2 16.2l2.2 2.2M18.4 5.6l-2.2 2.2M7.8 16.2l-2.2 2.2"/><circle cx="12" cy="12" r="3.2"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6.5a1.5 1.5 0 0 0-3 0V11m0-5.5v-2a1.5 1.5 0 0 0-3 0V11m0-7.5a1.5 1.5 0 0 0-3 0V12m0-8a1.5 1.5 0 0 0-3 0v7"/><path d="M18 8a1.5 1.5 0 0 1 3 0v6a8.5 8.5 0 0 1-8.6 8.5h-.9c-2.7 0-4.6-1.3-6.3-3.4L3 16.5c-.8-1-.7-2.4.3-3.2h0c1-.8 2.4-.6 3.2.4L8 15.5"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="10" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="14" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="10" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="14" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="1.3" fill="currentColor" stroke="none"/><circle cx="14" cy="18" r="1.3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></symbol>
+    <symbol id="i-refresh-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.64-6.36M3 3v6h6"/></symbol>
+  </svg>
+
+  <!-- ======================= shared top nav ======================= -->
+  <header class="nav" id="nav">
+    <a class="brand" id="brand-home" href="#" title="Back to start">
+      <svg class="logo" viewBox="0 0 64 64"><use href="#logo"/></svg>
+      <span class="wordmark">Mermaid</span>
+      <span class="brand-chip">Reader</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="https://mermaid.ai/products/ai" target="_blank" rel="noreferrer noopener">Products</a>
+      <a href="https://mermaid.ai/solutions/mermaid-for-developers" target="_blank" rel="noreferrer noopener">Solutions</a>
+      <a href="https://mermaid.ai/pricing" target="_blank" rel="noreferrer noopener">Pricing</a>
+      <a href="https://mermaid.ai/community" target="_blank" rel="noreferrer noopener">Community</a>
+      <a href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noreferrer noopener">Open Source</a>
+      <a href="https://mermaid.js.org/intro/" target="_blank" rel="noreferrer noopener">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="stars-pill" href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noreferrer noopener" title="Star mermaid-js/mermaid on GitHub">
+        <svg class="ic"><use href="#i-github"/></svg><svg class="ic star"><use href="#i-star"/></svg><span>89.6k</span>
+      </a>
+      <a class="btn ghost sm" href="https://mermaid.ai/contact-us" target="_blank" rel="noreferrer noopener">Contact sales</a>
+      <button class="btn primary sm" id="nav-start">Open the editor</button>
+    </div>
+  </header>
+
+  <!-- ======================= HOME (mirrors mermaid.ai) ======================= -->
+  <main id="home">
+    <section class="hero">
+      <div class="aurora" aria-hidden="true"></div>
+      <a class="eyebrow" href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noreferrer noopener">
+        <svg class="ic"><use href="#i-sparkles"/></svg>
+        From the team behind Mermaid.js — now on your desktop
+      </a>
+      <h1>You already think in systems.<br /><em>Now you can diagram them just as fast.</em></h1>
+      <p class="sub">Drop in a <code>.mmd</code> or <code>.md</code> file, paste code, or start from a template — and watch the diagram build itself.</p>
+
+      <div class="drop-card" id="drop-card" role="button" tabindex="0" aria-label="Open a file">
+        <div class="drop-left">
+          <svg class="ic big"><use href="#i-folder"/></svg>
+        </div>
+        <div class="drop-mid">
+          <strong>Drag &amp; drop your file anywhere</strong>
+          <span><code>.mmd</code> · <code>.mermaid</code> · <code>.md</code> · <code>.markdown</code> — everything stays on your machine</span>
+        </div>
+        <div class="drop-btns">
+          <button class="btn primary" id="btn-open-file"><svg class="ic"><use href="#i-folder"/></svg>Open file</button>
+          <button class="btn soft" id="btn-paste"><svg class="ic"><use href="#i-clipboard"/></svg>Paste</button>
+        </div>
+      </div>
+
+      <p class="trusted">Made for teams like yours — trusted by over <b>5M</b> people and over <b>200k</b> companies</p>
+    </section>
+
+    <section class="chips-section">
+      <h2 class="chips-title">What do you need to figure out?</h2>
+      <div class="chips" id="prompt-chips"></div>
+      <p class="chips-sub">Or start with a diagram type:</p>
+      <div class="chips" id="type-chips"></div>
+    </section>
+
+    <section class="features">
+      <article class="feature-card">
+        <div class="fx-visual fx-code" aria-hidden="true">
+          <div class="fx-window">
+            <div class="fx-pane left">
+              <span class="t-kw">sequenceDiagram</span>
+              <span><i class="t-id">Alice</i><i class="t-op">-&gt;&gt;</i><i class="t-id">Bob</i>: Hello</span>
+              <span><i class="t-id">Bob</i><i class="t-op">--&gt;&gt;</i><i class="t-id">Alice</i>: Hi!</span>
+            </div>
+            <div class="fx-pane right">
+              <div class="fx-node a"></div><div class="fx-node b"></div>
+              <div class="fx-line"></div><div class="fx-line l2"></div>
+            </div>
+          </div>
+        </div>
+        <h3>Build with code</h3>
+        <p>Write Mermaid syntax and watch the diagram lay itself out as you type — no syntax hunting, no export step.</p>
+      </article>
+      <article class="feature-card">
+        <div class="fx-visual fx-doc" aria-hidden="true">
+          <div class="fx-window">
+            <div class="fx-hline w70"></div>
+            <div class="fx-tline"></div><div class="fx-tline w85"></div>
+            <div class="fx-mmd"><svg class="ic"><use href="#logo"/></svg></div>
+            <div class="fx-tline"></div><div class="fx-tline w60"></div>
+          </div>
+        </div>
+        <h3>Reads Markdown, too</h3>
+        <p>Open any <code>.md</code> file and read it as a beautifully typeset document — every <code>```mermaid</code> block rendered inline.</p>
+      </article>
+      <article class="feature-card">
+        <div class="fx-visual fx-share" aria-hidden="true">
+          <div class="fx-window">
+            <div class="fx-chiprow"><span class="fx-chip p"></span><span class="fx-chip s"></span><span class="fx-chip l"></span></div>
+            <div class="fx-link"><svg class="ic"><use href="#i-link"/></svg><span>mermaid://share/pako:7f2…</span></div>
+          </div>
+        </div>
+        <h3>Share anywhere</h3>
+        <p>Export crisp SVG &amp; PNG, copy the diagram to your clipboard, or share the whole doc as a compressed link.</p>
+      </article>
+    </section>
+
+    <section class="oss-band">
+      <div class="oss-inner">
+        <svg class="logo xl" viewBox="0 0 64 64"><use href="#logo"/></svg>
+        <h2>From the team behind <span class="serif-italic">Mermaid.js</span></h2>
+        <p>Every diagram you make keeps Mermaid’s open-source roots growing.</p>
+        <a class="stars-pill dark" href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noreferrer noopener">
+          <svg class="ic"><use href="#i-github"/></svg><svg class="ic star"><use href="#i-star"/></svg><span>89.6k</span>
+        </a>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track" id="marquee-track"></div>
+        </div>
+        <p class="oss-note">BUILT BY</p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <svg class="logo" viewBox="0 0 64 64"><use href="#logo"/></svg>
+          <span class="wordmark">Mermaid</span>
+          <p>Diagramming and charting tool.<br/>JavaScript-based, Markdown-inspired.</p>
+        </div>
+        <div class="foot-col"><h5>Products</h5><a href="https://mermaid.ai/products/ai" target="_blank" rel="noreferrer noopener">Mermaid AI</a><a href="https://mermaid.ai/products/code" target="_blank" rel="noreferrer noopener">Code Editor</a><a href="https://mermaid.ai/products/visual-editor" target="_blank" rel="noreferrer noopener">Visual Editor</a><a href="https://mermaid.ai/products/presentations" target="_blank" rel="noreferrer noopener">Presentations</a></div>
+        <div class="foot-col"><h5>Open Source</h5><a href="https://github.com/mermaid-js/mermaid" target="_blank" rel="noreferrer noopener">Mermaid.js</a><a href="https://mermaid.js.org/intro/" target="_blank" rel="noreferrer noopener">Documentation</a><a href="https://mermaid.live" target="_blank" rel="noreferrer noopener">Live Editor</a><a href="https://github.com/mermaid-js/mermaid/blob/develop/LICENSE" target="_blank" rel="noreferrer noopener">License</a></div>
+        <div class="foot-col"><h5>Community</h5><a href="https://github.com/mermaid-js/mermaid/discussions" target="_blank" rel="noreferrer noopener">Discussions</a><a href="https://mermaid.ai/blog" target="_blank" rel="noreferrer noopener">Blog</a><a href="https://mermaid.ai/contact-us" target="_blank" rel="noreferrer noopener">Contact sales</a></div>
+      </div>
+      <div class="foot-bottom">
+        <span>Mermaid Reader — a desktop file reader inspired by <a href="https://mermaid.ai" target="_blank" rel="noreferrer noopener">mermaid.ai</a></span>
+        <span>Rendering by Mermaid.js v<span id="mermaid-ver-foot">11</span> · MIT</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ======================= STUDIO (mirrors Mermaid Live Editor) ======================= -->
+  <div id="studio" hidden>
+    <header class="studio-bar">
+      <div class="sb-left">
+        <button class="icon-btn" id="btn-back" title="Back to start" data-tip="Back to start"><svg class="ic"><use href="#i-back"/></svg></button>
+        <svg class="logo sm" viewBox="0 0 64 64"><use href="#logo"/></svg>
+        <span class="wordmark sm">Mermaid</span>
+        <div class="file-chip" id="file-chip" title="Current file">
+          <svg class="ic"><use href="#i-file"/></svg>
+          <span class="file-name" id="file-name">untitled.mmd</span>
+          <span class="dirty-dot" id="dirty-dot" hidden></span>
+        </div>
+      </div>
+
+      <div class="sb-right">
+        <button class="btn soft sm" id="btn-samples"><svg class="ic"><use href="#i-sample"/></svg>Samples<svg class="ic chev"><use href="#i-chev"/></svg></button>
+        <button class="btn soft sm" id="btn-actions"><svg class="ic"><use href="#i-dots"/></svg>Actions<svg class="ic chev"><use href="#i-chev"/></svg></button>
+        <button class="btn primary sm" id="btn-share"><svg class="ic"><use href="#i-share"/></svg>Share</button>
+        <span class="sb-divider"></span>
+        <div class="segmented" role="group" aria-label="View mode">
+          <button data-vp="code" class="icon-btn" title="Code only"><svg class="ic"><use href="#i-code"/></svg></button>
+          <button data-vp="split" class="icon-btn active" title="Split view"><svg class="ic"><use href="#i-split"/></svg></button>
+          <button data-vp="preview" class="icon-btn" title="Preview only"><svg class="ic"><use href="#i-eye"/></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <div class="workbench">
+      <aside class="rail" aria-label="Quick actions">
+        <button class="rail-btn" id="rail-home" data-tip="Start page"><svg class="ic"><use href="#i-home"/></svg></button>
+        <button class="rail-btn" id="rail-open" data-tip="Open file…"><svg class="ic"><use href="#i-folder"/></svg></button>
+        <button class="rail-btn" id="rail-save" data-tip="Save file"><svg class="ic"><use href="#i-save"/></svg></button>
+        <button class="rail-btn" id="rail-recent" data-tip="Recent files"><svg class="ic"><use href="#i-clock"/></svg></button>
+        <span class="rail-flex"></span>
+        <button class="rail-btn" id="rail-shortcuts" data-tip="Keyboard shortcuts"><svg class="ic"><use href="#i-keyboard"/></svg></button>
+        <a class="rail-btn" href="https://mermaid.js.org/intro/" target="_blank" rel="noreferrer noopener" data-tip="Mermaid docs"><svg class="ic"><use href="#i-book"/></svg></a>
+      </aside>
+
+      <section class="code-pane" id="code-pane">
+        <div class="pane-head">
+          <svg class="ic faint"><use href="#i-code"/></svg>
+          <span class="pane-title">Code</span>
+          <span class="kind-toggle segmented mini" role="group" aria-label="Source format">
+            <button data-kind="mermaid" class="active">Mermaid</button>
+            <button data-kind="markdown">Markdown</button>
+          </span>
+          <span class="pane-flex"></span>
+          <button class="icon-btn sm ghosted" id="btn-reload-file" title="Reload from disk" data-desktop-only hidden><svg class="ic"><use href="#i-refresh-ccw"/></svg></button>
+        </div>
+        <div id="cm-host"></div>
+      </section>
+
+      <div class="gutter" id="gutter" role="separator" aria-orientation="vertical" title="Drag to resize"><svg class="ic"><use href="#i-grip"/></svg></div>
+
+      <section class="preview-pane" id="preview-pane">
+        <div class="pane-head preview-head">
+          <svg class="ic faint"><use href="#i-eye"/></svg>
+          <span class="pane-title" id="preview-title">Diagram</span>
+          <label class="theme-select" id="theme-wrap" title="Diagram theme">
+            <span>Theme</span>
+            <select id="sel-theme">
+              <option value="default">Default</option>
+              <option value="neutral">Neutral</option>
+              <option value="forest">Forest</option>
+              <option value="dark">Dark</option>
+              <option value="base">Base</option>
+            </select>
+          </label>
+          <span class="pane-flex"></span>
+          <div class="zoom-pill" id="zoom-pill">
+            <button class="icon-btn sm" id="zoom-out" title="Zoom out"><svg class="ic"><use href="#i-minus"/></svg></button>
+            <button class="zoom-val" id="zoom-val" title="Reset zoom">100%</button>
+            <button class="icon-btn sm" id="zoom-in" title="Zoom in"><svg class="ic"><use href="#i-plus"/></svg></button>
+            <span class="zp-div"></span>
+            <button class="icon-btn sm" id="zoom-fit" title="Fit to view"><svg class="ic"><use href="#i-fit"/></svg></button>
+          </div>
+          <button class="icon-btn sm" id="btn-outline" title="Document outline" style="display:none"><svg class="ic"><use href="#i-list"/></svg></button>
+          <button class="icon-btn sm" id="btn-copy-img" title="Copy diagram as image"><svg class="ic"><use href="#i-copy"/></svg></button>
+          <button class="icon-btn sm" id="btn-full" title="Fullscreen preview"><svg class="ic"><use href="#i-max"/></svg></button>
+        </div>
+
+        <div class="stage" id="stage" tabindex="0">
+          <div class="stage-content" id="stage-content"></div>
+          <article class="doc" id="doc-view" hidden></article>
+          <div class="stage-empty" id="stage-empty" hidden>
+            <svg class="logo ghost" viewBox="0 0 64 64"><use href="#logo"/></svg>
+            <p>Start typing Mermaid on the left…</p>
+          </div>
+        </div>
+
+        <div class="error-card" id="error-card" hidden>
+          <div class="err-head">
+            <svg class="ic"><use href="#i-alert"/></svg>
+            <strong>Syntax error in text</strong>
+            <span class="err-ver" id="err-ver"></span>
+            <span class="pane-flex"></span>
+            <button class="icon-btn sm" id="err-close" title="Dismiss"><svg class="ic"><use href="#i-x"/></svg></button>
+          </div>
+          <pre id="err-msg"></pre>
+        </div>
+      </section>
+
+      <aside class="drawer" id="drawer" hidden>
+        <div class="drawer-head">
+          <strong id="drawer-title">Recent</strong>
+          <span class="pane-flex"></span>
+          <button class="icon-btn sm" id="drawer-close" title="Close"><svg class="ic"><use href="#i-x"/></svg></button>
+        </div>
+        <div class="drawer-body" id="drawer-body"></div>
+      </aside>
+    </div>
+
+    <footer class="statusbar">
+      <div class="sb-status">
+        <span class="status-pill" id="sync-pill"><span class="pulse"></span>Live preview</span>
+        <span class="status-item">Mermaid.js v<span id="mermaid-ver">11</span></span>
+        <span class="status-item kind" id="status-kind">mermaid</span>
+      </div>
+      <div class="sb-meta">
+        <span class="status-item err-flag" id="status-errors" hidden><svg class="ic"><use href="#i-alert"/></svg><span id="status-err-count">1</span></span>
+        <span class="status-item" id="status-cursor">Ln 1, Col 1</span>
+        <span class="status-item" id="status-chars">0 characters</span>
+        <span class="status-item" id="status-render">—</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ======================= overlays ======================= -->
+  <div class="drop-overlay" id="drop-overlay" hidden>
+    <div class="drop-inner">
+      <svg class="ic xl"><use href="#i-download"/></svg>
+      <h2>Drop it — we’ll do the rest</h2>
+      <p><code>.mmd</code> · <code>.mermaid</code> · <code>.md</code> · <code>.markdown</code> · <code>.txt</code></p>
+    </div>
+  </div>
+
+  <div class="menu" id="menu-root" hidden></div>
+  <div class="toast-root" id="toast-root"></div>
+
+  <!-- ======================= vendor + app ======================= -->
+  <script src="vendor/mermaid.min.js"></script>
+  <script src="vendor/marked.min.js"></script>
+  <script src="vendor/dompurify.min.js"></script>
+  <script src="vendor/codemirror/codemirror.js"></script>
+  <script src="vendor/codemirror/xml.js"></script>
+  <script src="vendor/codemirror/markdown.js"></script>
+  <script src="vendor/codemirror/active-line.js"></script>
+  <script src="vendor/codemirror/matchbrackets.js"></script>
+  <script src="js/samples.js"></script>
+  <script src="js/mermaid-mode.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
